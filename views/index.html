@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Hello socket!</h2>
+    <input type="text" id="msg">
+    <input type="button" value="버튼" id="btn">
+    <div id="content">
+
+    </div>
+    <script type="text/javascript" src="http://localhost:3000/socket.io.js"></script>
+    <script type="text/javascript">
+        let socket = io("http://localhost:3000");
+
+        socket.on('connect',()=>{
+            const msg = document.querySelector('#msg');
+            msg.value = '접속완료되었습니다.'
+        })
+
+        const btn = document.querySelector('#btn');
+        btn.addEventListener('click',()=>{
+            const msg = document.querySelector('#msg');
+            socket.emit('send',{msg:msg.value})
+            const content = document.querySelector('#content');
+            content.innerHTML += `내가 쓴글 ${msg.msg} <br/>`
+        })
+
+        socket.on('call',(data)=>{
+            const content = document.querySelector('#content');
+            content.innerHTML += `남이 쓴글 ${data.msg} <br/>`
+        })
+    </script>
+</body>
+</html>
